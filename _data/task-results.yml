@@ -1,0 +1,130 @@
+
+lab1:
+  results:
+    - "**Resultado esperado:** Cloud Shell listo y carpeta `~/labs-gcp-engineer/lab01` creada y validada."
+    - "**Resultado esperado:** El Dataset `billing_sim` ha sido creado y verificado desde UI y CLI."
+    - "**Resultado esperado:** EL archivo `data/billing_export_sim.jsonl` listo, con datos ficticios consistentes y evidencia en `outputs/`."
+    - "**Resultado esperado:** La tabla cargada, consultas de validación correctas y VIEW normalizada creada."
+    - "**Resultado esperado:** Recursos de la practica eliminados."
+lab2:
+  results:
+    - "**Resultado esperado:** Cloud Shell listo con carpeta `lab02` y variables exportadas."
+    - "**Resultado esperado:** Proyecto listo para usar IAP TCP forwarding."
+    - "**Resultado esperado:** VM privada creada correctamente y lista para firewall/IAP."
+    - "**Resultado esperado:** Firewall listo para SSH y túnel web por IAP."
+    - "**Resultado esperado:** Acceso SSH funcional vía IAP (UI y CLI)."
+    - "**Resultado esperado:** El contenedor web funcionando y accesible por port-forward vía IAP."
+    - "**Resultado esperado:** Recursos eliminados y costos minimizados."
+lab3:
+  results:
+    - "**Resultado esperado:** La carpeta `lab03` lista y variables creadas."
+    - "**Resultado esperado:** Bucket creado y visible en UI y CLI."
+    - "**Resultado esperado:** Versionado habilitado y verificado."
+    - "**Resultado esperado:** Objeto con múltiples versiones y restauración demostrada."
+    - "**Resultado esperado:** Reglas de lifecycle creadas y visibles en UI/CLI."
+    - "**Resultado esperado:** Recursos de la practica eliminados para minimizar los costos."
+lab4:
+  results:
+    - "**Resultado esperado:** Cloud Shell listo con carpeta `lab04` y variables exportadas."
+    - "**Resultado esperado:** VPC `lab04-vpc` creada con `subnet-app` y `subnet-client` en la región."
+    - "**Resultado esperado:** Las firewall rules has sido creadas y visibles mediante (UI y CLI)."
+    - "**Resultado esperado:** 2 VMs backend desplegadas y listas para health checks/traffic."
+    - "**Resultado esperado:** El VIP interno responde y distribuye tráfico hacia instancias saludables del MIG."
+    - "**Resultado esperado:** Recursos de la practica eliminados para minimizar los costos."
+lab5:
+  results:
+    - "**Resultado esperado:** Cloud Shell configurado, carpeta `lab05` creada, variables del laboratorio definidas en `scripts/env.sh` y evidencia guardada en `outputs/gcloud_config.yaml`."
+    - "**Resultado esperado:** VPC `lab05-vpc` y subnet `lab05-subnet-app` creadas por UI, Cloud Router `lab05-router` y Cloud NAT `lab05-nat` configurados, y evidencias exportadas en `outputs/vpc.yaml`, `outputs/subnet_app.yaml`, `outputs/router.yaml` y `outputs/nat.yaml`."
+    - "**Resultado esperado:** APIs habilitadas, Private Service Access configurado con rango `lab05-psa-range`, Cloud SQL MySQL `lab05-sql-mysql` creado con IP privada, base `appdb` y usuario `appuser` creados, y evidencias exportadas en `outputs/sql_instance.yaml`, `outputs/sql_databases.txt` y `outputs/sql_users.txt`."
+    - "**Resultado esperado:** Service Account `sa-lab05-app` creado con rol Cloud SQL Client, VM `lab05-vm-app` creada sin IP pública, firewall para IAP SSH configurado, Cloud SQL Auth Proxy instalado y ejecutándose como servicio, y conexión MySQL verificada con inserción/consulta de datos."
+    - "**Resultado esperado:** App Flask instalada en la VM, servicio `lab05-app` activo, página web con estilo respondiendo en `127.0.0.1:8080`, y acceso validado mediante túnel SSH/IAP (port-forward) + `curl`/Web Preview."
+    - "**Resultado esperado:** Limpieza ejecutada (UI) eliminando VM, Cloud SQL, NAT/Router, firewall y VPC, y verificación final con `gcloud` confirmando que no quedan recursos activos."
+
+lab6:
+  results:
+    - "**Resultado esperado:** Cloud Shell configurado, carpeta `lab06` creada, variables en `scripts/env.sh` definidas y evidencia guardada en `outputs/gcloud_config.yaml`."
+    - "**Resultado esperado:** VPC `lab06-vpc` y subnet `lab06-subnet-app` creadas, firewall para IAP SSH/HTTP y para health checks configurado por tags, con evidencias en `outputs/fw_*.yaml`."
+    - "**Resultado esperado:** Startup script reproducible creado, Instance Template `lab06-tpl-web` generado por UI con tags correctos, sin IP pública, y evidencia exportada en `outputs/template.yaml`."
+    - "**Resultado esperado:** Health Check HTTP `lab06-hc-http` creado (puerto 80, path `/healthz`) y validado por CLI en `outputs/health_check.yaml`."
+    - "**Resultado esperado:** MIG `lab06-mig-web` creado con autoscaling (CPU target 60%, min 1 max 3) y autohealing (health check + initial delay), validado en `outputs/mig.yaml` y `outputs/mig_instances.txt`."
+    - "**Resultado esperado:** Acceso a la web por IAP tunnel verificado, fallo inducido (Nginx detenido) observado en `healthState`/reemplazo, y carga de CPU inducida para evidenciar autoscaling (tamaño/instancias) con evidencias en `outputs/mig_*final*`."
+    - "**Resultado esperado:** Limpieza ejecutada eliminando MIG, template, health check, firewall rules, subnet y VPC; verificación final confirma que no quedan recursos."
+lab7:
+  results:
+    - "**Resultado esperado:** Cloud Shell configurado, carpeta `lab07` creada, variables del laboratorio definidas en `scripts/env.sh` y evidencia guardada en `outputs/gcloud_config.yaml`."
+    - "**Resultado esperado:** Backend creado por UI (VPC/subnet/firewall), template con startup script Nginx + `/healthz`, health check `lab07-hc-http` y MIG `lab07-mig-web` con evidencias en `outputs/`."
+    - "**Resultado esperado:** IP global estática `lab07-lb-ip` reservada y dominio definido (dominio propio o `sslip.io`), con evidencia de DNS y variables guardadas."
+    - "**Resultado esperado:** Certificado SSL Google-managed `lab07-cert-managed` creado en Certificate Manager con el dominio del laboratorio y evidencia del estado inicial por CLI."
+    - "**Resultado esperado:** Global external HTTPS Load Balancer `lab07-lb-https` creado por UI, frontend 443 con IP estática y certificado administrado, backend apuntando al MIG y evidencias de proxies/forwarding rules en `outputs/`."
+    - "**Resultado esperado:** Validación de DNS → IP, respuesta HTTPS por `curl`, inspección de certificado con `openssl`, y verificación del estado del cert (hasta ACTIVE) con evidencias guardadas."
+    - "**Resultado esperado:** Limpieza ejecutada eliminando LB, certificado, IP global, MIG, template, health check, firewall, subnet y VPC, con verificación final confirmando que no quedan recursos."
+lab8:
+  results:
+    - "**Resultado esperado:** Cloud Shell configurado, carpeta `lab08` creada, variables en `scripts/env.sh` definidas y evidencia guardada en `outputs/gcloud_config.yaml`."
+    - "**Resultado esperado:** APIs habilitadas (GKE, Artifact Registry, Cloud Build, Compute) y repositorio Docker `lab08-repo` creado en `us-central1` con evidencia en `outputs/enabled_apis.txt` y `outputs/ar_repo.yaml`."
+    - "**Resultado esperado:** App contenedorizada creada (Nginx + página con estilo + `/healthz`), imagen construida y publicada con Cloud Build en Artifact Registry, con evidencia en `outputs/cloudbuild_submit.txt` y `outputs/ar_images.txt`."
+    - "**Resultado esperado:** Clúster GKE Autopilot `lab08-gke` creado por UI, `kubectl` configurado con `get-credentials` y acceso validado con evidencias en `outputs/cluster_info.txt`, `outputs/nodes.txt` y `outputs/kube_system_pods_head.txt`."
+    - "**Resultado esperado:** Namespace `lab08`, Deployment `lab08-web` (2 réplicas) y Service `lab08-web-svc` (NodePort) aplicados y validados con rollout/pods/service en `outputs/`."
+    - "**Resultado esperado:** IP global reservada, Ingress `lab08-web-ing` creado (GCE), IP asignada, y acceso público validado con `curl` (home y `/healthz`) y `kubectl describe ingress`, evidencias en `outputs/`."
+    - "**Resultado esperado:** Limpieza ejecutada eliminando recursos Kubernetes, IP global, clúster GKE y (opcional) repositorio Artifact Registry; verificación final confirma que no quedan recursos activos."
+lab9:
+  results:
+    - "**Resultado esperado:** Cloud Shell listo, proyecto validado, carpeta `~/labs-gcp-engineer/lab09` creada con `function/`, `scripts/`, `outputs/` y variables definidas en `scripts/env.sh`."
+    - "**Resultado esperado:** APIs habilitadas/confirmadas (Pub/Sub, Cloud Functions, Cloud Run, Eventarc, Cloud Build, Artifact Registry y Logging) y evidencia guardada en `outputs/enabled_apis.txt`."
+    - "**Resultado esperado:** Topic `lab09-events` creado, suscripción `lab09-events-sub` creada, publicación desde UI realizada y consumo (pull) validado; evidencias en `outputs/topic_describe.yaml`, `outputs/sub_describe.yaml`, `outputs/pull_1.txt`."
+    - "**Resultado esperado:** Código Python para CloudEvent Pub/Sub creado (`main.py`, `requirements.txt`), verificado y compilado sin errores; evidencias en `outputs/main_py_preview.txt` y `outputs/python_compile.txt`."
+    - "**Resultado esperado:** Cloud Run functions / Cloud Functions 2nd gen `lab09-ps-handler` desplegada desde UI con trigger Pub/Sub sobre `lab09-events`, verificada por CLI (describe) y listado de triggers Eventarc; evidencias en `outputs/function_describe.yaml` y `outputs/eventarc_triggers.txt`."
+    - "**Resultado esperado:** Flujo end-to-end validado publicando eventos JSON (CLI + UI) y confirmando ejecución en logs (UI y `gcloud logging read`); evidencias en `outputs/logging_read.txt` y `outputs/topic_subscriptions.txt`."
+    - "**Resultado esperado:** Limpieza ejecutada (función, suscripción y topic eliminados) y verificación final sin recursos pendientes; evidencias en `outputs/cleanup_function.txt` y `outputs/cleanup_topic.txt`."
+lab10:
+  results:
+    - "**Resultado esperado:** Cloud Shell activo, proyecto validado, carpeta `~/labs-gcp-engineer/lab10` creada con `scripts/` y `outputs/`, y variables definidas en `scripts/env.sh`."
+    - "**Resultado esperado:** Compute Engine habilitado y VM base `lab10-vm-a` creada en `ZONE_A`, verificada por UI/CLI; boot disk identificado y guardado como evidencia."
+    - "**Resultado esperado:** Datos preparados en la VM A (archivo `marker.txt` y página web con estilo en nginx), verificación por `curl localhost` e IP externa capturada (si aplica)."
+    - "**Resultado esperado:** VM A detenida, snapshot `lab10-snap-boot` creado desde el boot disk y verificado por CLI (`snapshot_describe.yaml`)."
+    - "**Resultado esperado:** Disco `lab10-disk-boot-restored` restaurado en `ZONE_B` desde el snapshot, VM `lab10-vm-b` creada desde el disco restaurado y validación exitosa del marker + nginx en la VM restaurada."
+    - "**Resultado esperado:** Limpieza ejecutada (VMs, disco restaurado y snapshot eliminados) con verificaciones por CLI y evidencias en `outputs/`."
+  
+lab11:
+  results:
+    - "**Resultado esperado:** Cloud Shell activo, proyecto validado, carpeta `~/labs-gcp-engineer/lab11` creada con `scripts/` y `outputs/`, y variables definidas en `scripts/env.sh`."
+    - "**Resultado esperado:** VM `lab11-mon-vm` creada desde cero en `ZONE`, verificada por UI/CLI; `stress-ng` instalado y carga de CPU ejecutada para generar variación en métricas."
+    - "**Resultado esperado:** Dashboard `LAB11 - CPU Dashboard` creado con gráfico de `CPU utilization` filtrado por la VM; verificación visual del comportamiento de la métrica y evidencia en `outputs/dashboard_evidence.txt`."
+    - "**Resultado esperado:** Canal de notificación (email) configurado y política `LAB11 - High CPU Alert` creada (umbral/ventana definidos); incidente validado al generar carga y evidencia en `outputs/alert_evidence.txt`."
+    - "**Resultado esperado:** Limpieza ejecutada (VM eliminada y, opcionalmente, dashboard/alerta removidos) con verificación final por CLI y evidencia en `outputs/cleanup_vm.txt`."
+ 
+lab12:
+  results:
+    - "**Resultado esperado:** Cloud Shell activo, proyecto validado, carpeta `~/labs-gcp-engineer/lab12` creada con `manifests/`, `scripts/`, `outputs/` y variables definidas en `scripts/env.sh`."
+    - "**Resultado esperado:** Clúster GKE Autopilot `lab12-gke` creado y conectado con `kubectl`; namespace `lab12` creado; deployment `errgen` desplegado y generando logs con el texto ancla `ERROR lab12`."
+    - "**Resultado esperado:** Logs analizados en Logs Explorer con filtros por clúster/namespace y `textPayload`; consulta guardada y verificación por CLI con `gcloud logging read`."
+    - "**Resultado esperado:** Dataset BigQuery `lab12_logs` creado; sink `lab12-sink-gke-errors` configurado con filtro; permisos otorgados al writer identity; tablas creadas y consulta SQL validando eventos exportados."
+    - "**Resultado esperado:** Limpieza ejecutada (deployment/namespace, sink, dataset y clúster eliminados según opción) con verificaciones por CLI y evidencias en `outputs/`."
+ 
+lab13:
+  results:
+    - "**Resultado esperado:** Cloud Shell activo, proyecto validado, APIs (IAM/Resource Manager/Compute) habilitadas, carpeta `~/labs-gcp-engineer/lab13` creada y variables definidas en `scripts/env.sh` (incluyendo `TARGET_USER_EMAIL`)."
+    - "**Resultado esperado:** VM de prueba `lab13-test-vm` creada (opcional, UI) y verificada por CLI (`describe/list`) con evidencias en `outputs/vm_describe.yaml` y `outputs/vm_list.txt`."
+    - "**Resultado esperado:** Permisos validados como testables; comparación con rol predefinido (`roles/compute.viewer`) documentada; rol personalizado (`lab13LeastPrivilegeComputeViewer`) creado con privilegio mínimo y validado por `gcloud iam roles describe`."
+    - "**Resultado esperado:** Rol asignado al usuario `TARGET_USER_EMAIL` desde IAM (Grant access) y binding verificado por CLI con `gcloud projects get-iam-policy` (evidencia en `outputs/iam_binding_check.txt`)."
+    - "**Resultado esperado:** Acceso verificado con Policy Troubleshooter (permiso `compute.instances.list` permitido y permisos administrativos `compute.instances.create`/`compute.instances.setMetadata` denegados). Evidencia opcional consolidada en `outputs/summary_role_and_binding.yaml`."
+    - "**Resultado esperado:** Limpieza ejecutada por separado para eliminar lo creado: VM de prueba (si existía), binding IAM (revocado) y rol personalizado (eliminado), validando el estado con evidencias en `outputs/cleanup_vm.txt`, `outputs/iam_binding_after_remove.txt`, `outputs/cleanup_role.txt` y `outputs/cleanup_final_state.txt`."
+
+lab14:
+  results:
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+lab15:
+  results:
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
