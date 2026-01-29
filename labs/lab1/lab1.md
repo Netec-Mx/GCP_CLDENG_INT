@@ -36,7 +36,7 @@ references:
     url: https://docs.cloud.google.com/shell/docs/how-cloud-shell-works
   - text: "BigQuery pricing (on-demand: primer 1 TiB/mes gratis)"
     url: https://cloud.google.com/bigquery/pricing
-prev: /
+prev: /lab15/lab15/
 next: /lab2/lab2/
 ---
 

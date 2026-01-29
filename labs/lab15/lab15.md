@@ -39,12 +39,17 @@ references:
   - text: "VPC Service Controls pricing (sin cargo adicional)"
     url: https://cloud.google.com/vpc-service-controls/pricing
 prev: /lab14/lab14/
-next: /lab16/lab16/
+next: /lab1/lab1/
 ---
 
 ---
 
-### Tarea 1. Preparar entorno, verificar organización y crear carpeta del laboratorio (UI + Cloud Shell)
+> **IMPORTANTE:** ES POSIBLE QUE A PARTIR DE LA **TAREA 3** NO SE PUEDA REALIZAR YA QUE ESTA PRACTICA USA LA ORGANIZACION DE LA CUENTA Y POR SENSIBILIDAD DE CONFIGURACIÓN PUEDE BLOQUEAR. **PUEDES TOMAR LOS PASOS DEMOSTRATIVOS, SOLO LECTURA**
+{: .lab-note .important .compact}
+
+---
+
+### Tarea 1. Preparar entorno, verificar organización y crear carpeta del laboratorio
 
 > **Tiempo estimado:** 5 minutos
 {: .lab-note .info .compact}
@@ -53,22 +58,35 @@ En esta tarea iniciarás Cloud Shell, verificarás que tu proyecto pertenece a u
 
 #### Tarea 1.1
 
-- {% include step_label.html %} Abre **Google Cloud Console** y lanza **Cloud Shell** (ícono `>_`).
+- {% include step_label.html %} Abre el navegador **Google Chrome** para autenticarte a **Google Cloud Console** --> [**AQUÍ**](https://cloud.google.com/cloud-console).
 
-  > **NOTA:** Cloud Shell ya trae `gcloud` y autenticación lista; úsalo para ejecutar pasos repetibles y guardar evidencias.
+  > **Nota:** Utiliza el **Usuario** y **Contraseña** asignados al curso para iniciar sesion en la cuenta de **GCP Console**
   {: .lab-note .info .compact}
 
   {% include step_image.html %}
 
-- {% include step_label.html %} Verifica el proyecto activo y expórtalo como variable.
+- {% include step_label.html %} Una vez autenticado activa **Cloud Shell** (ícono `>_` en la esquina superior derecha).
 
-  > **NOTA:** Esto evita crear perímetros/políticas en el proyecto equivocado.
-  {: .lab-note .warning .compact}
+  {% include step_image.html %}
+
+- {% include step_label.html %} Si aparece la ventana emergente **Autoriza Cloud Shell** da clic en el botón **Autorizar**
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Verifica el **proyecto activo** que se te asigno en el curso dentro de Cloud Shell.
+
+  > **Nota:** Si sale vacío o incorrecto, configúralo en el siguiente paso. El **ID/NOMBRE del proyecto** es diferente para cada usuario.
+  {: .lab-note .info .compact}
 
   ```bash
-  gcloud config get-value project
-  export PROJECT_ID="$(gcloud config get-value project)"
-  echo "PROJECT_ID=$PROJECT_ID"
+  gcloud projects list
+  ```
+  {% include step_image.html %}
+
+- {% include step_label.html %} Configura el proyecto sustituye la variable **TU_PROJECT_ID** con la de ru proyecto.
+
+  ```bash
+  gcloud config set project TU_PROJECT_ID
   ```
   {% include step_image.html %}
 
@@ -78,19 +96,38 @@ En esta tarea iniciarás Cloud Shell, verificarás que tu proyecto pertenece a u
   {: .lab-note .important .compact}
 
   ```bash
-  # Obtiene el ORGANIZATION_ID (si existe)
-  export ORG_ID="$(gcloud projects get-ancestors "$PROJECT_ID" \
-    --filter="type:organization" --format="value(ID)" | head -n 1)"
+  export PROJECT_ID="$(gcloud config get-value project)"
+  echo "PROJECT_ID=$PROJECT_ID"  
+  ```
+  ```bash
+  ORG_ID="$(gcloud projects get-ancestors "$PROJECT_ID" \
+    --format="value(type,id)" \
+  | awk -F'\t' '$1=="organization"{print $2; exit}')"
+  ```
+  ```bash
   echo "ORG_ID=$ORG_ID"
   ```
   {% include step_image.html %}
 
-- {% include step_label.html %} Si `ORG_ID` salió vacío, confirma en UI:
-  - **IAM & Admin → Settings** y revisa el campo **Organization**.
+- {% include step_label.html %} Si `ORG_ID` salió vacío, confirma en UI. **Si si obtuviste el org id avanza al siguiente paso**
+
+  - **IAM & Admin** luego **Settings** y revisa el campo **Organization**.
 
   > **NOTA:** Si no hay organización, detén aquí y usa un proyecto dentro de una org (Cloud Identity / Workspace).
   {: .lab-note .important .compact}
 
+- {% include step_label.html %} Crea la estructura de carpetas de la práctica y entra al directorio.
+
+  > **NOTA:** Mantener `scripts/` y `outputs/` por práctica facilita evidencias y limpieza.
+  {: .lab-note .info .compact}
+
+  ```bash
+  cd ~
+  mkdir -p labs-gcp-engineer/lab15/{scripts,outputs}
+  ```
+  ```bash
+  cd labs-gcp-engineer/lab15
+  ```
   {% include step_image.html %}
 
 - {% include step_label.html %} Habilita APIs necesarias (si el proyecto es nuevo o no están habilitadas).
@@ -103,22 +140,11 @@ En esta tarea iniciarás Cloud Shell, verificarás que tu proyecto pertenece a u
     accesscontextmanager.googleapis.com \
     storage.googleapis.com \
     logging.googleapis.com
-
+  ```
+  ```bash
   gcloud services list --enabled \
     --filter="name:(accesscontextmanager.googleapis.com OR storage.googleapis.com OR logging.googleapis.com)" \
     --format="table(name)"
-  ```
-  {% include step_image.html %}
-
-- {% include step_label.html %} Crea la estructura de carpetas de la práctica y entra al directorio.
-
-  > **NOTA:** Mantener `scripts/` y `outputs/` por práctica facilita evidencias y limpieza.
-  {: .lab-note .info .compact}
-
-  ```bash
-  cd ~
-  mkdir -p labs-gcp-finops/lab15/{scripts,outputs}
-  cd labs-gcp-finops/lab15
   ```
   {% include step_image.html %}
 
@@ -146,11 +172,11 @@ En esta tarea iniciarás Cloud Shell, verificarás que tu proyecto pertenece a u
   # Servicio restringido
   export RESTRICTED_SERVICE="storage.googleapis.com"
   EOF
-
+  ```
+  ```bash
   source scripts/env.sh
   sed -n '1,220p' scripts/env.sh | tee outputs/env_sh.txt
   ```
-  {% include step_image.html %}
 
 - {% include step_label.html %} Verifica estructura del laboratorio y guarda evidencia.
 
@@ -159,18 +185,22 @@ En esta tarea iniciarás Cloud Shell, verificarás que tu proyecto pertenece a u
 
   ```bash
   pwd | tee outputs/pwd.txt
+  ```
+  ```bash
   ls -la | tee outputs/ls_root.txt
+  ```
+  ```bash
   ls -la scripts outputs | tee outputs/ls_subfolders.txt
   ```
   {% include step_image.html %}
 
-{% assign results = site.data["task-results"][page.slug].results %}
+{% assign results = site.data.task-results[page.slug].results %}
 {% capture r1 %}{{ results[0] }}{% endcapture %}
 {% include task-result.html title="Tarea finalizada" content=r1 %}
 
 ---
 
-### Tarea 2. Crear “datos sensibles” en Cloud Storage (UI + Cloud Shell)
+### Tarea 2. Crear “datos sensibles” en Cloud Storage
 
 > **Tiempo estimado:** 5 minutos
 {: .lab-note .info .compact}
@@ -187,40 +217,63 @@ En esta tarea crearás un bucket (seguro por defecto) y subirás un archivo `sen
   ```bash
   source scripts/env.sh
   export PROJECT_ID="$(gcloud config get-value project)"
-
+  ```
+  ```bash
   PROJ_SHORT="$(echo "$PROJECT_ID" | tr '[:upper:]' '[:lower:]' | tr '_' '-' | cut -c1-18)"
   SUFFIX="$(date +%s | tail -c 6)"
+  ```
+  ```bash
   export BUCKET_NAME="lab15-vpcsc-${PROJ_SHORT}-${SUFFIX}"
-
+  ```
+  ```bash
   # Persistir en env.sh (y recargar)
   grep -q '^export BUCKET_NAME=' scripts/env.sh && sed -i 's|^export BUCKET_NAME=.*|export BUCKET_NAME="'"$BUCKET_NAME"'"|' scripts/env.sh \
     || echo 'export BUCKET_NAME="'"$BUCKET_NAME"'"' >> scripts/env.sh
   source scripts/env.sh
-
+  ```
+  ```bash
   echo "BUCKET_NAME=$BUCKET_NAME" | tee outputs/bucket_name.txt
   ```
   {% include step_image.html %}
 
-- {% include step_label.html %} En la consola, ve a **Cloud Storage → Buckets → Create**.
+- {% include step_label.html %} En la consola, ve a **Cloud Storage** luego **Buckets**.
 
-  > **NOTA:** Usaremos la UI para que el flujo sea fácil de replicar por participantes.
+  > **NOTA:** Usaremos la UI para que el flujo sea fácil de replicar.
   {: .lab-note .info .compact}
 
   {% include step_image.html %}
 
-- {% include step_label.html %} Crea el bucket con:
-  - Name: el valor `BUCKET_NAME` (en `outputs/bucket_name.txt`)
-  - Location type: **Region**
-  - Location: `us-central1` (o tu región)
-  - Default storage class: **Standard**
-  - Public access prevention: **Enforced**
-  - Uniform bucket-level access: **Enabled**
-  - Click **Create**
+- {% include step_label.html %} Ahora da clic en **Create**.
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Crea el bucket con los siguientes datos:
 
   > **NOTA:** “Uniform access” evita ACLs dispersas; IAM centraliza permisos y reduce errores.
   {: .lab-note .important .compact}
 
+  - Name: usa el valor de `BUCKET_NAME` (en `outputs/bucket_name.txt`)
+  - Clic en **Continue**
+
   {% include step_image.html %}
+
+  - Location type: **Region**
+  - Location: **us-central1**
+  - Clic en **Continue**
+
+  {% include step_image.html %}
+
+  - Set a default class: **Standard**
+  - Clic en **Continue**
+
+  {% include step_image.html %}
+
+  - Prevent public access: **Enforce public access prevention on this bucket**
+  - Access control: **Uniform**
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Da clic en **Create**
 
 - {% include step_label.html %} Verifica por CLI que el bucket existe y registra evidencia.
 
@@ -246,19 +299,27 @@ En esta tarea crearás un bucket (seguro por defecto) y subirás un archivo `sen
   CONFIDENCIAL: Datos de ejemplo para laboratorio VPC-SC.
   No compartir fuera del perímetro.
   EOF
-
+  ```
+  ```bash
   gcloud storage cp outputs/sensitive.txt "gs://$BUCKET_NAME/sensitive.txt"
+  ```
+  {% include step_image.html %}
+  ```bash
   gcloud storage ls "gs://$BUCKET_NAME/" | tee outputs/bucket_ls_before_vpcsc.txt
   ```
   {% include step_image.html %}
 
-{% assign results = site.data["task-results"][page.slug].results %}
-{% capture r2 %}{{ results[1] }}{% endcapture %}
-{% include task-result.html title="Tarea finalizada" content=r2 %}
+{% assign results = site.data.task-results[page.slug].results %}
+{% capture r1 %}{{ results[1] }}{% endcapture %}
+{% include task-result.html title="Tarea finalizada" content=r1 %}
 
 ---
 
-### Tarea 3. Identificar Access Policy y crear Access Level (allowlist por IP) (UI + Cloud Shell)
+### Tarea 3. Identificar Access Policy y crear Access Level (allowlist por IP)
+
+> **IMPORTANTE:** SI NO PUEDES REALIZAR ALGUNOS PASOS DE ESTA TAREA, TOMALOS DE REFERENCIA/LECTURA. RECUERDA QUE PUEDE HABER RESTRICCIONES POR PARTE DE LA CUENTA ORGANIZATIVA.
+{: .lab-note .important .compact}
+
 
 > **Tiempo estimado:** 6 minutos
 {: .lab-note .info .compact}
@@ -267,7 +328,7 @@ En esta tarea identificarás (o crearás si tu entorno lo permite) una **Access 
 
 #### Tarea 3.1
 
-- {% include step_label.html %} Registra `ORG_ID` en `scripts/env.sh` y valida (no asumas).
+- {% include step_label.html %} Registra `ORG_ID` en `scripts/env.sh` y valida.
 
   > **NOTA:** Esto evita tener que re-calcularlo en pasos posteriores.
   {: .lab-note .info .compact}
@@ -275,14 +336,22 @@ En esta tarea identificarás (o crearás si tu entorno lo permite) una **Access 
   ```bash
   source scripts/env.sh
   export PROJECT_ID="$(gcloud config get-value project)"
-  ORG_ID_FOUND="$(gcloud projects get-ancestors "$PROJECT_ID" --filter="type:organization" --format="value(ID)" | head -n 1)"
-  echo "ORG_ID_FOUND=$ORG_ID_FOUND" | tee outputs/org_id.txt
 
+  ORG_ID_FOUND="$(
+    gcloud projects get-ancestors "$PROJECT_ID" \
+      --format="value(type,id)" \
+    | awk -F'\t' '$1=="organization"{print $2; exit}'
+  )"
+  ```
+  ```bash
+  echo "ORG_ID_FOUND=$ORG_ID_FOUND" | tee outputs/org_id.txt
+  ```
+  {% include step_image.html %}
+  ```bash
   grep -q '^export ORG_ID=' scripts/env.sh && sed -i 's|^export ORG_ID=.*|export ORG_ID="'"$ORG_ID_FOUND"'"|' scripts/env.sh \
     || echo 'export ORG_ID="'"$ORG_ID_FOUND"'"' >> scripts/env.sh
   source scripts/env.sh
   ```
-  {% include step_image.html %}
 
 - {% include step_label.html %} Lista Access Policies disponibles para la organización y guarda el `POLICY_NAME`.
 
@@ -294,7 +363,6 @@ En esta tarea identificarás (o crearás si tu entorno lo permite) una **Access 
   gcloud access-context-manager policies list --organization "$ORG_ID" \
     --format="table(name,title)" | tee outputs/policies_list.txt
   ```
-  {% include step_image.html %}
 
 - {% include step_label.html %} Si tu organización **NO** tiene ninguna Access Policy (caso raro), crea una (solo si tienes permisos).
 
@@ -323,15 +391,17 @@ En esta tarea identificarás (o crearás si tu entorno lo permite) una **Access 
   ```bash
   source scripts/env.sh
   POLICY_NAME_FOUND="$(gcloud access-context-manager policies list --organization "$ORG_ID" --format="value(name)" | head -n 1)"
+  ```
+  ```bash
   echo "POLICY_NAME_FOUND=$POLICY_NAME_FOUND" | tee outputs/policy_name.txt
-
+  ```
+  {% include step_image.html %}
+  ```bash
   grep -q '^export POLICY_NAME=' scripts/env.sh && sed -i 's|^export POLICY_NAME=.*|export POLICY_NAME="'"$POLICY_NAME_FOUND"'"|' scripts/env.sh \
     || echo 'export POLICY_NAME="'"$POLICY_NAME_FOUND"'"' >> scripts/env.sh
   source scripts/env.sh
-
   grep -n '^export POLICY_NAME=' scripts/env.sh | tee outputs/policy_env_line.txt
   ```
-  {% include step_image.html %}
 
 - {% include step_label.html %} Obtén tu IP pública actual (desde Cloud Shell) y crea una subnet `/32` para allowlist.
 
@@ -346,30 +416,41 @@ En esta tarea identificarás (o crearás si tu entorno lo permite) una **Access 
     || curl -s https://checkip.amazonaws.com 2>/dev/null \
     || true
   )"
+  ```
+  ```bash
   echo "MY_IP=$MY_IP" | tee outputs/my_ip.txt
-
+  ```
+  {% include step_image.html %}
+  ```bash
   MY_IP_CIDR="${MY_IP}/32"
   echo "MY_IP_CIDR=$MY_IP_CIDR" | tee outputs/my_ip_cidr.txt
   ```
   {% include step_image.html %}
 
-- {% include step_label.html %} En la consola, ve a **Security → Access Context Manager → Access Levels → New**.
+- {% include step_label.html %} En la consola, ve a **Security** luego **Access Context Manager**.
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Ahora da clic en **Create access Level**.
 
   > **NOTA:** El Access Level será la excepción controlada para permitir acceso desde tu IP en modo Enforced.
   {: .lab-note .important .compact}
 
   {% include step_image.html %}
 
-- {% include step_label.html %} Crea el Access Level con:
-  - Name/ID: `lab15_trusted_ip`
-  - Title: `LAB15 Trusted IP`
-  - Condition: **IP subnetworks** → agrega `MY_IP_CIDR`
-  - Save
+- {% include step_label.html %} Crea el Access Level con los siguientes datos:
 
   > **NOTA:** Si tu IP cambia (VPN/red distinta), tendrás que actualizar el Access Level para que el “allow” funcione.
   {: .lab-note .warning .compact}
 
+  - Access level title: `LAB15 Trusted IP`
+  - Create conditions in: **Basic mode**
+  - When condition is met, return: **True**
+  - IP subnetworks: **Public IP** y agrega `MY_IP_CIDR`
+
   {% include step_image.html %}
+
+- {% include step_label.html %} Clic en **Save**
 
 - {% include step_label.html %} Verifica por CLI que el Access Level existe y contiene tu IP.
 
@@ -380,24 +461,28 @@ En esta tarea identificarás (o crearás si tu entorno lo permite) una **Access 
   source scripts/env.sh
   gcloud access-context-manager levels list --policy "$POLICY_NAME" \
     --format="table(name,title)" | tee outputs/access_levels_list.txt
-
+  ```
+  {% include step_image.html %}
+  ```bash
   LEVEL_FULL_NAME="$(gcloud access-context-manager levels list --policy "$POLICY_NAME" \
     --filter="name~lab15_trusted_ip OR title:LAB15 Trusted IP" \
     --format="value(name)" | head -n 1)"
   echo "LEVEL_FULL_NAME=$LEVEL_FULL_NAME" | tee outputs/access_level_full_name.txt
-
+  ```
+  {% include step_image.html %}
+  ```bash
   gcloud access-context-manager levels describe "$LEVEL_FULL_NAME" --policy "$POLICY_NAME" \
     --format="yaml(name,title,basic.conditions)" | tee outputs/access_level_describe.yaml
   ```
   {% include step_image.html %}
 
-{% assign results = site.data["task-results"][page.slug].results %}
-{% capture r3 %}{{ results[2] }}{% endcapture %}
-{% include task-result.html title="Tarea finalizada" content=r3 %}
+{% assign results = site.data.task-results[page.slug].results %}
+{% capture r1 %}{{ results[2] }}{% endcapture %}
+{% include task-result.html title="Tarea finalizada" content=r1 %}
 
 ---
 
-### Tarea 4. Crear perímetro VPC-SC en Dry run y observar violaciones en logs (UI + Cloud Shell)
+### Tarea 4. Crear perímetro VPC-SC en Dry run y observar violaciones en logs
 
 > **Tiempo estimado:** 7 minutos
 {: .lab-note .info .compact}
@@ -406,27 +491,48 @@ En esta tarea crearás un **service perimeter** en modo **Dry run** (no bloquea,
 
 #### Tarea 4.1
 
-- {% include step_label.html %} En la consola, ve a **Security → VPC Service Controls**.
-  - Selecciona tu **Access Policy** (la del `POLICY_NAME`) si te lo solicita.
+- {% include step_label.html %} En la consola, ve a **Security** luego **VPC Service Controls**.
 
   > **NOTA:** VPC-SC “vive” dentro de la Access Policy (Access Context Manager).
   {: .lab-note .info .compact}
 
   {% include step_image.html %}
 
-- {% include step_label.html %} Crea un perímetro nuevo en **Dry run**:
-  - Mode: **Dry run**
-  - Click **New perimeter**
-  - Name: `lab15-perimeter`
-  - Title: `LAB15 Perimeter (Dry run)`
-  - Projects: agrega tu proyecto `PROJECT_ID`
-  - Restricted services: agrega **Cloud Storage API** (`storage.googleapis.com`)
-  - Access levels: **NO agregues ninguno** todavía
+- {% include step_label.html %} Selecciona tu **Access Policy** (la del `POLICY_NAME`) si te lo solicita.
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Da clic en la pestaña **Dry run mode**
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Crea un perímetro nuevo dando clic en **+ New perimeter**
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Ahora configura los siguientes datos:
 
   > **NOTA:** En Dry run puedes “ver qué se rompería” antes de bloquear en Enforced.
   {: .lab-note .important .compact}
 
+  - Title: `LAB15 Perimeter (Dry run)`
+  - Perimeter type: **Regular**
+  - Enforced mode: **Dry run**
+  - Clic **Continue**
+
   {% include step_image.html %}
+
+  - Projects: agrega tu proyecto `PROJECT_ID` (Cuidado de no agregar otro proyecto puede haber varios)
+  - Clic **Continue**
+
+  {% include step_image.html %}
+
+  - Restricted services: agrega **Cloud Storage API** (`storage.googleapis.com`)
+  - Clic **Continue**
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Clic en **Create**
 
 - {% include step_label.html %} Genera el evento de acceso (en Dry run debe **funcionar** y generar evidencia de violación).
 
@@ -439,7 +545,11 @@ En esta tarea crearás un **service perimeter** en modo **Dry run** (no bloquea,
   ```
   {% include step_image.html %}
 
-- {% include step_label.html %} Abre **Logging → Logs Explorer** y ejecuta este filtro para encontrar violaciones en Dry run:
+- {% include step_label.html %} Abre **Monitoring** luego **Logs Explorer** . Si es necesario cambia a tu proyecto asignado
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Ejecuta este filtro para encontrar violaciones en Dry run:
 
   > **NOTA:** Busca `dryRun="true"` y el identificador `vpcServiceControlsUniqueId`.
   {: .lab-note .important .compact}
@@ -451,9 +561,9 @@ En esta tarea crearás un **service perimeter** en modo **Dry run** (no bloquea,
   ```
   {% include step_image.html %}
 
-- {% include step_label.html %} (Alternativa CLI) Recupera evidencia del evento por `gcloud logging read`.
+- {% include step_label.html %} Recupera evidencia del evento por `gcloud logging read`.
 
-  > **NOTA:** Este archivo JSON es excelente evidencia para reporte/entrega.
+  > **NOTA:** Este archivo JSON es excelente evidencia para reporte/entrega. La imagen representa una parte del documento ya que es un poco extenso.
   {: .lab-note .info .compact}
 
   ```bash
@@ -470,18 +580,18 @@ En esta tarea crearás un **service perimeter** en modo **Dry run** (no bloquea,
 
   ```bash
   python3 - <<'PY'
-import json
-p="outputs/vpcsc_dryrun_logs.json"
-try:
-    data=json.load(open(p))
-    if not data:
-        print("NO_LOGS_FOUND")
-    else:
-        md=data[0].get("protoPayload",{}).get("metadata",{})
-        print(md.get("vpcServiceControlsUniqueId","NO_UNIQUE_ID"))
-except Exception as e:
-    print("PARSE_ERROR:", e)
-PY
+  import json
+  p="outputs/vpcsc_dryrun_logs.json"
+  try:
+      data=json.load(open(p))
+      if not data:
+          print("NO_LOGS_FOUND")
+      else:
+          md=data[0].get("protoPayload",{}).get("metadata",{})
+          print(md.get("vpcServiceControlsUniqueId","NO_UNIQUE_ID"))
+  except Exception as e:
+      print("PARSE_ERROR:", e)
+  PY
   ```
   {% include step_image.html %}
 
@@ -491,7 +601,7 @@ PY
 
 ---
 
-### Tarea 5. Cambiar a Enforced, validar bloqueo y habilitar acceso controlado con Access Level (UI + Cloud Shell)
+### Tarea 5. Cambiar a Enforced, validar bloqueo y habilitar acceso controlado con Access Level
 
 > **Tiempo estimado:** 7 minutos
 {: .lab-note .info .compact}
@@ -500,17 +610,21 @@ En esta tarea aplicarás el perímetro en **Enforced** para provocar un bloqueo 
 
 #### Tarea 5.1
 
-- {% include step_label.html %} En la consola, abre el perímetro `lab15-perimeter` y haz clic en **Edit**.
+- {% include step_label.html %} En la consola, abre el perímetro `lab15-perimeter`.
 
   > **NOTA:** Realizarás dos cambios: 1) Enforced y 2) agregar Access Level permitido.
   {: .lab-note .info .compact}
 
   {% include step_image.html %}
 
-- {% include step_label.html %} Cambia el modo a **Enforced** y guarda cambios.
+- {% include step_label.html %} Cambia el modo a **Enforced config** y confirma.
 
   > **NOTA:** Enforced **bloquea** solicitudes que violan el perímetro (ya no solo registra).
   {: .lab-note .important .compact}
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Verifica que aparezca en la seccion de **Enforced mode**.
 
   {% include step_image.html %}
 
@@ -527,6 +641,8 @@ En esta tarea aplicarás el perímetro en **Enforced** para provocar un bloqueo 
   ```
   {% include step_image.html %}
 
+- {% include step_label.html %} Ve nuevamente a **Monitoring** y luego a **Log explorer**, cambia a tu proyecto.
+
 - {% include step_label.html %} Busca el evento de bloqueo en Logs Explorer (Enforced).
 
   > **NOTA:** Debe aparecer `dryRun="false"` y un `vpcServiceControlsUniqueId`.
@@ -534,15 +650,26 @@ En esta tarea aplicarás el perímetro en **Enforced** para provocar un bloqueo 
 
   ```text
   log_id("cloudaudit.googleapis.com/policy")
-  protoPayload.metadata.dryRun="false"
   protoPayload.metadata.vpcServiceControlsUniqueId:*
   ```
   {% include step_image.html %}
 
-- {% include step_label.html %} Agrega el Access Level `lab15_trusted_ip` en el perímetro (sección **Access levels / Allowed access levels**) y guarda.
+- {% include step_label.html %} Ahora regresa a la regla da clic en **Security** luego en **VPC-Service Controls**. No se te olvide cambiar a **Organización** da clic en el nombre del perimtero.
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Haz clic en **Edit**
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Agrega el Access Level `lab15_trusted_ip` en el perímetro (sección **Access levels / Allowed access levels**).
 
   > **NOTA:** Esto crea la excepción controlada: desde tu IP allowlist, el acceso vuelve a funcionar.
   {: .lab-note .important .compact}
+
+  {% include step_image.html %}
+
+- {% include step_label.html %} Clic en **Save** y confirma la ventana emergente del cambio.
 
   {% include step_image.html %}
 
@@ -578,20 +705,19 @@ En esta tarea aplicarás el perímetro en **Enforced** para provocar un bloqueo 
     'log_id("cloudaudit.googleapis.com/policy") AND protoPayload.metadata.vpcServiceControlsUniqueId:*' \
     --limit=5 --format="json" | tee outputs/vpcsc_latest_policy_logs.json
   ```
-  {% include step_image.html %}
 
-{% assign results = site.data["task-results"][page.slug].results %}
-{% capture r5 %}{{ results[4] }}{% endcapture %}
-{% include task-result.html title="Tarea finalizada" content=r5 %}
+{% assign results = site.data.task-results[page.slug].results %}
+{% capture r1 %}{{ results[4] }}{% endcapture %}
+{% include task-result.html title="Tarea finalizada" content=r1 %}
 
 ---
 
-### Tarea 6. Limpieza (opcional) para evitar costos y dejar el entorno estable (UI + Cloud Shell)
+### Tarea 6. Limpieza de recursos
 
 > **Tiempo estimado:** 3 minutos
 {: .lab-note .info .compact}
 
-En esta tarea (opcional) eliminarás el bucket y retirarás el perímetro/Access Level para dejar el entorno como estaba.
+En esta tarea eliminarás el bucket y retirarás el perímetro/Access Level para dejar el entorno como estaba.
 
 #### Tarea 6.1
 
@@ -600,89 +726,49 @@ En esta tarea (opcional) eliminarás el bucket y retirarás el perímetro/Access
   > **NOTA:** Storage cobra por almacenamiento/operaciones; elimina el bucket para evitar cargos residuales.
   {: .lab-note .warning .compact}
 
-  **UI:** Cloud Storage → Buckets → `BUCKET_NAME` → Delete
-
   ```bash
   source scripts/env.sh
   gcloud storage rm -r "gs://$BUCKET_NAME" || true
+  ```
+  ```bash
   gcloud storage buckets describe "gs://$BUCKET_NAME" >/dev/null 2>&1 || echo "OK: bucket eliminado" | tee outputs/cleanup_bucket.txt
   ```
   {% include step_image.html %}
 
-- {% include step_label.html %} En **Security → VPC Service Controls**, elimina el perímetro `lab15-perimeter` (o desactívalo si tu org no permite borrar).
+- {% include step_label.html %} En **Security** luego **VPC Service Controls**, elimina el perímetro `lab15-perimeter` (o desactívalo si tu org no permite borrar).
 
   > **NOTA:** Un perímetro activo puede afectar integraciones futuras; en laboratorios es mejor retirarlo.
   {: .lab-note .important .compact}
 
   {% include step_image.html %}
 
-- {% include step_label.html %} En **Security → Access Context Manager → Access Levels**, elimina `lab15_trusted_ip` si fue solo para el lab.
+- {% include step_label.html %} En **Security** luego **Access Context Manager** clic en **Access Levels**, elimina `lab15_trusted_ip`.
 
   > **NOTA:** Mantén el set de Access Levels limpio para evitar reglas confusas a futuro.
   {: .lab-note .info .compact}
 
   {% include step_image.html %}
 
-- {% include step_label.html %} Verifica por CLI que el Access Level ya no exista (opcional, evidencia).
+- {% include step_label.html %} Elimina la politica creada para la practica.
 
-  > **NOTA:** Si no tienes permisos para listar, toma evidencia con capturas en UI.
-  {: .lab-note .warning .compact}
+  > **NOTA:** Si te marca algun error puede ser por que hay mas politicas, identifica el nombre de tu politica y ajusta las variables para eliminarla. Tambien puedes eliminarla manualmente
+  {: .lab-note .info .compact}
 
   ```bash
   source scripts/env.sh
-  gcloud access-context-manager levels list --policy "$POLICY_NAME" \
-    --filter="name~lab15_trusted_ip OR title:LAB15 Trusted IP" \
-    --format="value(name)" | tee outputs/access_level_post_cleanup.txt
+
+  # Extrae el número desde "accessPolicies/123..."
+  POLICY_NUMBER="${POLICY_NAME#accessPolicies/}"
+  echo "POLICY_NUMBER=$POLICY_NUMBER"
+
+  # (Recomendado) quita el default policy si apunta a esa policy
+  gcloud config unset access_context_manager/policy 2>/dev/null || true
+
+  # Borra la Access Policy
+  gcloud access-context-manager policies delete "$POLICY_NUMBER" --quiet
   ```
   {% include step_image.html %}
 
-{% assign results = site.data["task-results"][page.slug].results %}
-{% capture r6 %}{{ results[5] }}{% endcapture %}
-{% include task-result.html title="Tarea finalizada" content=r6 %}
-
----
-
-## Resultado final (de toda la práctica)
-
-- Bucket `BUCKET_NAME` creado con objeto `sensitive.txt`.
-- Access Policy identificada/creada y registrada (`POLICY_NAME`).
-- Access Level `lab15_trusted_ip` creado con allowlist por IP.
-- Perímetro `lab15-perimeter` creado en **Dry run** y evidencias de violación consultadas en logs (`dryRun=true`).
-- Perímetro cambiado a **Enforced** y bloqueo real validado (403 / VPC-SC, `dryRun=false`).
-- Excepción aplicada con Access Level y acceso restaurado de forma controlada.
-
----
-
-## Notas y/o Consideraciones
-
-- **VPC-SC complementa IAM**, no lo sustituye: IAM define “quién”, VPC-SC define “desde dónde/en qué contexto”.
-- Empieza con **Dry run** en entornos reales: observa violaciones y ajusta Access Levels / reglas antes de Enforced.
-- Si tu IP cambia (VPN/red), actualiza el Access Level. Para entornos corporativos, considera condiciones adicionales (dispositivo/identidad).
-- Si el bloqueo no se reproduce desde Cloud Shell en tu organización, valida desde una red/IP no allowlist y usa los logs con `vpcServiceControlsUniqueId` como evidencia principal.
-
----
-
-## URLS de referencia
-
-- https://docs.cloud.google.com/vpc-service-controls/docs/create-service-perimeters
-- https://docs.cloud.google.com/vpc-service-controls/docs/access-control?hl=es-419
-- https://docs.cloud.google.com/vpc-service-controls/docs/audit-logging
-- https://docs.cloud.google.com/vpc-service-controls/docs/retrieve-troubleshoot-errors
-- https://cloud.google.com/vpc-service-controls/pricing
-
----
-
-## Task results (obligatorio) — pega esto en `_data/task-results/lab15.yml`
-
-> **IMPORTANTE:** Este bloque alimenta `site.data["task-results"][page.slug].results` y corresponde a los índices usados en cada tarea (0..5).
-{: .lab-note .info .compact}
-
-```yaml
-results:
-  - "✅ Tarea 1 completada: Cloud Shell activo, proyecto verificado, organización validada, APIs (Access Context Manager/Storage/Logging) habilitadas, carpeta `~/labs-gcp-finops/lab15` creada con `scripts/` y `outputs/`, y variables base definidas en `scripts/env.sh`."
-  - "✅ Tarea 2 completada: Bucket de Cloud Storage creado con configuración segura (Uniform access + Public access prevention) y objeto `sensitive.txt` cargado y validado mediante `gcloud storage ls/cat`."
-  - "✅ Tarea 3 completada: Access Policy identificada/creada y registrada (`POLICY_NAME`); IP pública obtenida y convertida a `/32`; Access Level `lab15_trusted_ip` creado (allowlist IP) y validado por CLI con `levels describe`."
-  - "✅ Tarea 4 completada: Perímetro `lab15-perimeter` creado en **Dry run** restringiendo `storage.googleapis.com`; lectura del objeto generó evidencia en logs (audit log policy) con `dryRun=true` y `vpcServiceControlsUniqueId` recuperados por UI/CLI."
-  - "✅ Tarea 5 completada: Perímetro cambiado a **Enforced** y bloqueo real validado (403 por VPC-SC); luego se agregó `lab15_trusted_ip` como Access Level permitido y se verificó que la lectura del objeto volvió a funcionar de forma controlada."
-  - "✅ Tarea 6 completada: Limpieza opcional realizada (bucket eliminado y configuración de perímetro/access level retirada según políticas de la organización) con verificaciones y evidencias guardadas en `outputs/`."
-```
+{% assign results = site.data.task-results[page.slug].results %}
+{% capture r1 %}{{ results[5] }}{% endcapture %}
+{% include task-result.html title="Tarea finalizada" content=r1 %}

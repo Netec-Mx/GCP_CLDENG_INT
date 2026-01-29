@@ -112,19 +112,16 @@ lab13:
 
 lab14:
   results:
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** Cloud Shell activo, proyecto validado, APIs habilitadas (GKE/IAM/Storage), carpeta `~/labs-gcp-engineer/lab14` creada con `manifests/`, `scripts/`, `outputs/` y variables definidas en `scripts/env.sh` (incluyendo `BUCKET_NAME`)."
+    - "**Resultado esperado:** Clúster GKE Autopilot `lab14-gke` creado y conectado con `kubectl`; `workloadIdentityConfig.workloadPool` verificado; namespace `lab14` creado y validado."
+    - "**Resultado esperado:** Bucket Cloud Storage creado y verificado; GSA `lab14-gsa` creado; permiso mínimo `roles/storage.objectViewer` asignado al GSA a nivel bucket; archivo `hello.txt` cargado y listado en el bucket."
+    - "**Resultado esperado:** KSA `lab14-ksa` creado y anotado con `iam.gke.io/gcp-service-account`; binding `roles/iam.workloadIdentityUser` aplicado al GSA para el KSA; Pod `wi-test` validó identidad en metadata server y leyó `hello.txt` desde el bucket sin usar claves."
+    - "**Resultado esperado:** Limpieza opcional ejecutada (namespace, bucket, GSA y clúster eliminados según opción) con verificaciones por CLI y evidencias en `outputs/`."
 lab15:
   results:
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
-    - "**Resultado esperado:** MODIFICAR AQUI EL TEXTO DE LA DESCRIPCION DEL RESULTADO ESPERADO"
+    - "**Resultado esperado:** Cloud Shell activo, proyecto verificado, organización validada, APIs (Access Context Manager/Storage/Logging) habilitadas, carpeta `~/labs-gcp-engineer/lab15` creada con `scripts/` y `outputs/`, y variables base definidas en `scripts/env.sh`."
+    - "**Resultado esperado:** Bucket de Cloud Storage creado con configuración segura (Uniform access + Public access prevention) y objeto `sensitive.txt` cargado y validado mediante `gcloud storage ls/cat`."
+    - "**Resultado esperado:** Access Policy identificada/creada y registrada (`POLICY_NAME`); IP pública obtenida y convertida a `/32`; Access Level `lab15_trusted_ip` creado (allowlist IP) y validado por CLI con `levels describe`."
+    - "**Resultado esperado:** Perímetro `lab15-perimeter` creado en **Dry run** restringiendo `storage.googleapis.com`; lectura del objeto generó evidencia en logs (audit log policy) con `dryRun=true` y `vpcServiceControlsUniqueId` recuperados por UI/CLI."
+    - "**Resultado esperado:** Perímetro cambiado a **Enforced** y bloqueo real validado (403 por VPC-SC); luego se agregó `lab15_trusted_ip` como Access Level permitido y se verificó que la lectura del objeto volvió a funcionar de forma controlada."
+    - "**Resultado esperado:** Limpieza opcional realizada (bucket eliminado y configuración de perímetro/access level retirada según políticas de la organización) con verificaciones y evidencias guardadas en `outputs/`."
