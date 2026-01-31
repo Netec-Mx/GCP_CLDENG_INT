@@ -23,7 +23,7 @@ gcp_cldeng_int:
       desc: "Crear bucket en Cloud Storage con versionado y lifecycle para retener solo versiones útiles y reducir costos." # DESCRIPCION BREVE DE LA PRACTICA 100-120 CARACTERES
 
     - id: lab4 
-      title: "Práctica 4: Crear VPC con 2 subredes, firewall y balanceo de carga interno"
+      title: "Crear VPC con 2 subredes, firewall y balanceo de carga interno"
       url:  "/lab4/lab4/"
       duration: "45 min" # AJUSTAR TIEMPO DE LA PRACTICA
       desc: "Diseñar VPC custom con 2 subredes, firewall mínimo y un ILB TCP interno hacia un MIG, validando en UI y CLI." # DESCRIPCION BREVE DE LA PRACTICA 100-120 CARACTERES
