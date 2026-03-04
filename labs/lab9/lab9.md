@@ -670,7 +670,8 @@ En esta tarea publicarás eventos JSON y verificarás ejecución consultando log
 
   ```bash
   source scripts/env.sh
-  gcloud functions describe "$FUNCTION_NAME" --gen2 --region "$REGION" --format="value(state)"
+  gcloud run services describe "$FUNCTION_NAME" --region "$REGION" \
+  --format="value(status.conditions[0].status)"
   ```
 
   {% include step_image.html %}

@@ -556,8 +556,7 @@ En esta tarea crearás un Health Check HTTP que consulta `/healthz` en el puerto
   {: .lab-note .info .compact}
 
   - Name: `lab06-hc-http`
-  - Scope: **Regional**
-  - Region: **us-central1 (Iowa)**
+  - Scope: **Global**
   - Protocol: **HTTP**
   - Port: `80`
   - Request path: `/healthz`
@@ -613,9 +612,9 @@ En esta tarea crearás el Managed Instance Group, habilitarás autoscaling por C
   {% include step_image.html %}
 
   - Location: **Multiple zones**
-  - Zones: `us-central1-a`
-  - Zones: `us-central1-b`
-  - Zones: `us-central1-c`
+    - Zones: `us-central1-a`
+    - Zones: `us-central1-b`
+    - Zones: `us-central1-c`
 
   {% include step_image.html %}
 
@@ -658,7 +657,7 @@ En esta tarea crearás el Managed Instance Group, habilitarás autoscaling por C
 
   ```bash
   source scripts/env.sh
-  gcloud compute instance-groups managed describe "$MIG_NAME" --zone "$ZONE" \
+  gcloud compute instance-groups managed list  \
     --format="yaml(name,instanceTemplate,targetSize,autoscaler,autoHealingPolicies,namedPorts)" \
     | tee outputs/mig.yaml
   ```
